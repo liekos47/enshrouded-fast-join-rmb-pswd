@@ -1,0 +1,10 @@
+[package]
+name = "quickjoin"
+edition.workspace = true
+version.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+shroudkit-api = { path = "../shroudkit-api" }
