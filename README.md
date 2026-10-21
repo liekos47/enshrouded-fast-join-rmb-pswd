@@ -31,6 +31,38 @@ Enshrouded/
 
 Both switches also show in the loader's in-game menu (Insert). The log is `shroudkit/shroudkit.log`.
 
+## Change or forget a saved password
+
+The easiest way to change a saved password: in the Join box, just type the new one. A typed password always wins,
+and it replaces the saved one.
+
+To edit the file by hand:
+
+1. **Close the game first.** The file is read when the game starts. Changes made while the game is running are
+   overwritten the next time a password is saved.
+2. Open `shroudkit\quickjoin.ini` (in the Enshrouded game folder) with Notepad. Each saved server is one line under
+   `[passwords]`:
+
+   ```ini
+   [passwords]
+   0314eca1e2ec...e1 = MyServerPassword
+   ```
+
+   The long hex code on the left identifies the server. It's the game's internal server ID, not its name. The text
+   after ` = ` is the password.
+3. Then:
+   - **Change a password:** replace the text after ` = ` and save the file.
+   - **Forget one server:** delete its whole line.
+   - **Forget all passwords:** delete everything below `[passwords]`, or delete the whole file (it's recreated
+     empty on the next start).
+
+**Which line is which server?** When a password is saved or used, `shroudkit\shroudkit.log` names the server by the
+first 12 characters of its code, e.g. `saved the typed password for server 0314eca1e2ec`. Find the line in
+`quickjoin.ini` that starts with those characters. If you're unsure, delete the lines and type each password once more.
+
+If an empty Join ever says "wrong password", the saved password is out of date: type the right one once and it
+replaces the saved one.
+
 ## Build
 
 Rust 1.85+ (edition 2024), Windows x64:
