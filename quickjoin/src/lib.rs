@@ -49,12 +49,16 @@ fn update() {
 }
 
 /// README, Fast join: two in-place patches stop RequestInternetServerList, which
-/// held every join reply for about 17 s.
+/// held every join reply for about 17 s. Signatures for Steam build 26082781
+/// (2026-10-21); the handles are read as [rdi+4..] since that build.
 fn fast_join(kit: &Kit) -> Result<Effect, String> {
-    // mov rax, [rcx] / call [rax] (RequestInternetServerList) / mov edx, [rdi-4Ch] / xor r9d, r9d / mov [rdi-48h], rax
-    let request = kit.find_unique("fast_join request", "48 8B 01 FF 10 8B 57 B4 45 33 C9 48 89 47 B8")?;
-    // test rdx, rdx / je fail / cmp [rdi-40h], r12 / je fail / test rax, rax / je fail / mov al, 2
-    let check = kit.find_unique("fast_join check", "48 85 D2 74 15 4C 39 67 C0 74 0F 48 85 C0 74 0A B0 02")? + 3;
+    // mov rax, [rcx] / call [rax] (RequestInternetServerList) / mov edx, [rdi] / xor r9d, r9d / mov [rdi+4], rax
+    let request = kit.find_unique("fast_join request", "48 8B 01 FF 10 8B 17 45 33 C9 48 89 47 04")?;
+    // cmp [rdi+4], 0 / mov [rdi+14h], rax / je fail / cmp [rdi+0Ch], 0 / je fail / test rax, rax / je fail / mov al, 2
+    let check = kit.find_unique(
+        "fast_join check",
+        "48 83 7F 04 00 48 89 47 14 74 16 48 83 7F 0C 00 74 0F 48 85 C0 74 0A B0 02",
+    )? + 9;
     Ok(Effect::Patches(vec![
         kit.patch(request, &[0x31, 0xC0, 0x90, 0x90, 0x90])?, // xor eax, eax: no request, handle 0
         kit.patch(check, &[0x90, 0x90])?,                       // a 0 internet handle no longer fails the search

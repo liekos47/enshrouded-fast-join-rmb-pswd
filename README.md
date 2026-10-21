@@ -9,7 +9,8 @@ A small client-side plugin for Enshrouded with two features:
 - **Remember password**: type a server's password once in the Join box. After that, press Join with the box
   **empty** and the saved password is sent. Typing a password always wins and replaces the saved one.
 
-No gameplay changes, client only. Tested on the Steam client, Enshrouded 1.0 build 1269579.
+No gameplay changes, client only. Tested on the Steam client, Enshrouded 1.0 build 1269579. Fast join re-targeted for the 2026-10-21 update (Steam
+build 26082781); not yet tested in game on that build.
 
 ## How it runs
 
@@ -88,8 +89,11 @@ in-place patches stop the internet request:
 
 | What | Signature | Change |
 |---|---|---|
-| `mov rax,[rcx]; call [rax]` (the request) | `48 8B 01 FF 10 8B 57 B4 45 33 C9 48 89 47 B8` | `xor eax,eax` + nops: no request, handle 0 |
-| `test rdx,rdx; je fail` (handle check) | `48 85 D2 74 15 4C 39 67 C0 74 0F 48 85 C0 74 0A B0 02`, +3 | `je` → two nops |
+| `mov rax,[rcx]; call [rax]` (the request) | `48 8B 01 FF 10 8B 17 45 33 C9 48 89 47 04` | `xor eax,eax` + nops: no request, handle 0 |
+| `cmp qword [rdi+4],0; ...; je fail` (handle check) | `48 83 7F 04 00 48 89 47 14 74 16 48 83 7F 0C 00 74 0F 48 85 C0 74 0A B0 02`, +9 | `je` → two nops |
+
+Before the 2026-10-21 update (build 1269579) the signatures were `48 8B 01 FF 10 8B 57 B4 45 33 C9 48 89 47 B8` and
+`48 85 D2 74 15 4C 39 67 C0 74 0F 48 85 C0 74 0A B0 02` (+3).
 
 Every reader of the internet-list handle tolerates 0.
 
