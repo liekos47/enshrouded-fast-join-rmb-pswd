@@ -9,8 +9,15 @@ A small client-side plugin for Enshrouded with two features:
 - **Remember password**: type a server's password once in the Join box. After that, press Join with the box
   **empty** and the saved password is sent. Typing a password always wins and replaces the saved one.
 
-No gameplay changes, client only. Tested on the Steam client, Enshrouded 1.0 build 1269579. Fast join re-targeted for the 2026-10-21 update (Steam
-build 26082781); not yet tested in game on that build.
+No gameplay changes, client only. Version 0.1.1 targets the Steam client after the 2026-10-21 update (Steam build
+26082781); 0.1.0 was tested on build 1269579.
+
+## Changes
+
+- **0.1.1 (2026-10-21)**: fast join works again after the 2026-10-21 game update. The update recompiled the
+  Join screen's server-browser code, so both fast join signatures stopped matching and fast join switched itself
+  off. Same patch, new signatures (see How it works). Remember password was not affected.
+- **0.1.0 (2026-10-20)**: first release: fast join and remember password.
 
 ## How it runs
 
